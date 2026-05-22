@@ -1,0 +1,203 @@
+{
+  "name": "lan-text-chat",
+  "displayName": "LAN Text Chat",
+  "description": "A simple LAN text chat extension for VS Code backed by a Rust relay service.",
+  "version": "0.0.6",
+  "publisher": "liangjw",
+  "engines": {
+    "vscode": "^1.92.0"
+  },
+  "icon": "resources/icon.png",
+  "license": "MIT",
+  "keywords": [
+    "chat",
+    "lan",
+    "websocket",
+    "team",
+    "rust"
+  ],
+  "galleryBanner": {
+    "color": "#1f6feb",
+    "theme": "dark"
+  },
+  "qna": false,
+  "extensionKind": [
+    "ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lljxww/lan-text-chat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lljxww/lan-text-chat/issues"
+  },
+  "homepage": "https://github.com/lljxww/lan-text-chat#readme",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onView:lanTextChat.chatView",
+    "onCommand:lanTextChat.connectServer",
+    "onCommand:lanTextChat.disconnectServer",
+    "onCommand:lanTextChat.toggleOfflineMode"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "lanTextChat",
+          "title": "LAN Chat",
+          "icon": "resources/chat.svg"
+        }
+      ]
+    },
+    "views": {
+      "lanTextChat": [
+        {
+          "type": "webview",
+          "id": "lanTextChat.chatView",
+          "name": "Chat"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "lanTextChat.connectServer",
+        "title": "LAN Chat: Connect Server"
+      },
+      {
+        "command": "lanTextChat.disconnectServer",
+        "title": "LAN Chat: Disconnect Server"
+      },
+      {
+        "command": "lanTextChat.toggleOfflineMode",
+        "title": "LAN Chat: Toggle Offline Mode"
+      },
+      {
+        "command": "lanTextChat.sendDirectMessage",
+        "title": "LAN Chat: Send Direct Message"
+      },
+      {
+        "command": "lanTextChat.createGroup",
+        "title": "LAN Chat: Create Group"
+      },
+      {
+        "command": "lanTextChat.renameGroup",
+        "title": "LAN Chat: Rename Group"
+      },
+      {
+        "command": "lanTextChat.inviteUserToGroup",
+        "title": "LAN Chat: Invite User to Group"
+      },
+      {
+        "command": "lanTextChat.leaveGroup",
+        "title": "LAN Chat: Leave Group"
+      },
+      {
+        "command": "lanTextChat.deleteGroup",
+        "title": "LAN Chat: Delete Group"
+      },
+      {
+        "command": "lanTextChat.clearLocalHistory",
+        "title": "LAN Chat: Clear Local History"
+      }
+    ],
+    "configuration": {
+      "title": "LAN Text Chat",
+      "properties": {
+        "lanTextChat.serverUrl": {
+          "type": "string",
+          "default": "ws://127.0.0.1:38991/ws",
+          "description": "Rust chat server WebSocket URL."
+        },
+        "lanTextChat.username": {
+          "type": "string",
+          "default": "",
+          "description": "Current user display name. If empty, the extension uses the operating system username."
+        },
+        "lanTextChat.userId": {
+          "type": "string",
+          "default": "",
+          "description": "Current unique user id. If empty, the extension creates and stores one in globalState."
+        },
+        "lanTextChat.offlineMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disconnect from the Rust chat server and keep local history available."
+        },
+        "lanTextChat.enableReadReceipts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Send and display read receipts."
+        },
+        "lanTextChat.autoReconnect": {
+          "type": "boolean",
+          "default": true,
+          "description": "Reconnect automatically after WebSocket disconnects."
+        },
+        "lanTextChat.reconnectIntervalMs": {
+          "type": "number",
+          "default": 3000,
+          "minimum": 500,
+          "description": "Automatic reconnect interval in milliseconds."
+        },
+        "lanTextChat.maxSavedMessages": {
+          "type": "number",
+          "default": 1000,
+          "minimum": 1,
+          "description": "Maximum number of chat messages saved locally across all conversations."
+        },
+        "lanTextChat.enableNotifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show VS Code notifications for incoming messages."
+        },
+        "lanTextChat.language": {
+          "type": "string",
+          "enum": ["zh-cn", "en"],
+          "default": "zh-cn",
+          "description": "Extension UI language."
+        },
+        "lanTextChat.sendShortcut": {
+          "type": "string",
+          "enum": ["enter", "ctrlEnter"],
+          "default": "enter",
+          "description": "Message send shortcut."
+        },
+        "lanTextChat.targetIps": {
+          "type": "array",
+          "default": [],
+          "markdownDeprecationMessage": "Deprecated. The extension no longer sends messages directly to target IPs; configure lanTextChat.serverUrl instead."
+        },
+        "lanTextChat.port": {
+          "type": "number",
+          "default": 38991,
+          "markdownDeprecationMessage": "Deprecated. The extension no longer listens on a local port; configure the Rust server URL instead."
+        },
+        "lanTextChat.serviceAddress": {
+          "type": "string",
+          "default": "",
+          "markdownDeprecationMessage": "Deprecated. Use lanTextChat.serverUrl."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run compile",
+    "package:vsix": "vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.12",
+    "@types/node": "^20.14.10",
+    "@types/vscode": "^1.92.0",
+    "@vscode/vsce": "^3.9.1",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "ws": "^8.17.1"
+  }
+}

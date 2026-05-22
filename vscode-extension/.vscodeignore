@@ -1,0 +1,11 @@
+.vscode/**
+.vscode-test/**
+src/**
+*.map
+tsconfig.json
+out/test/**
+*.vsix
+coverage/**
+.gitignore
+npm-debug.log
+yarn-error.log
